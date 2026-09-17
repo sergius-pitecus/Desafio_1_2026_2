@@ -1,11 +1,14 @@
 #include <iostream>
+#include "funciones_primarias.h"
 using namespace std;
 
 short int pos_byte(short int num_columnas_tabla, short int fila, short int columna){
-    return ((((fila * num_columnas_tabla) + columna)*3)/8);
+    //retorna el byte en el que se encuentra la ficha
+    return ((((fila * num_columnas_tabla) + columna)*3)/8);// fila y columna aqui empiezan en 0
 }
 
 short int pos_bit_in_byte(short int num_columnas_tabla, short int fila, short int columna){
+    //retorna un numero que nos indica el tipo de ficha segun su ubicacion en el byte
     return ((((fila * num_columnas_tabla) + columna)*3) % 8);
 }
 
@@ -106,7 +109,7 @@ void cambiar_ficha(unsigned char ** ptr_contenido,
 
     unsigned char bit_1, bit_2, bit_3;
 
-    void byte_trajando = ptr_contenido[indice_byte/6][indice_byte % 6];
+    unsigned char byte_trabajando = ptr_contenido[indice_byte/6][indice_byte % 6];
     unsigned char siguiente_byte_trajando = ptr_contenido[indice_byte/6][(indice_byte % 6)+1];
 
     unsigned char auxiliar;
@@ -114,46 +117,45 @@ void cambiar_ficha(unsigned char ** ptr_contenido,
     switch (BitInByte) {
     case 0:
         // código si BitInByte == 0 (xxx0000 donde x es un bit de la ficha a cambiar)
-        auxiliar = byte_trajando & mask1;
+        auxiliar = byte_trabajando & mask1;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio<<5;
         break;
     case 1:
-        auxiliar = byte_trajando & mask2;
+        auxiliar = byte_trabajando & mask2;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio<<4;
         break;
     case 2:
-        auxiliar = byte_trajando & mask3;
+        auxiliar = byte_trabajando & mask3;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio<<3;
         break;
     case 3:
-        auxiliar = byte_trajando & mask4;
+        auxiliar = byte_trabajando & mask4;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio<<2;
         break;
     case 4:
-       auxiliar = byte_trajando & mask5;
+       auxiliar = byte_trabajando & mask5;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio<<1;
         break;
     case 5:
-        auxiliar = byte_trajando & mask6;
+        auxiliar = byte_trabajando & mask6;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | ficha_cambio;
         break;
     case 6:
-        auxiliar = byte_trajando & mask7;
+        auxiliar = byte_trabajando & mask7;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | (ficha_cambio>>1);
-        auxiliar = siguiente_byte_trajando & mask 9
+        auxiliar = siguiente_byte_trajando & mask9;
         ptr_contenido[indice_byte/6][(indice_byte % 6 )+1] = auxiliar | (ficha_cambio << 7); // mirar si el siguiente byte al sumar uno este o no en el arreglo actual (cosa que no creo por que se supone en ese byte (el final) todos los elementos estan completos)
 
         break;
     case 7:
-        auxiliar = byte_trajando & mask8;
+        auxiliar = byte_trabajando & mask8;
         ptr_contenido[indice_byte/6][indice_byte % 6] = auxiliar | (ficha_cambio >> 2);
-        auxiliar = siguiente_byte_trajando & mask 10
+        auxiliar = siguiente_byte_trajando & mask10;
         ptr_contenido[indice_byte/6][(indice_byte % 6 )+1] = auxiliar | (ficha_cambio << 6);
     default:
         cerr<<"si sale este mensaje hay error en identificacion del orden de la ficha en bits";
         break;
     }
-    return 0;
 }
 
 void reubicar_ficha(unsigned char ** ptr_contenido, short int num_columnas 
