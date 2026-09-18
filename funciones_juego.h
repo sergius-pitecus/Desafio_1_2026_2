@@ -12,6 +12,14 @@ short int buscar_izquierda(unsigned char ** ptr_contenido,short int fila, short 
 
 short int buscar_derecha(unsigned char ** ptr_contenido,short int fila, short int columna, short int num_columnas);
 
-void buscar_combinaciones(unsigned char ** ptr_contenido,short int num_filas, short int num_columnas);
+void print_tablero(unsigned char ** ptr_contenido, short int num_columnas, short int num_filas);
+
+short int buscar_combinaciones(unsigned char ** ptr_contenido,short int num_filas, short int num_columnas);
+
+void rellenar_huecos(unsigned char ** ptr_contenido,short int num_filas, short int num_columnas);
+
+void quitar_una_ficha(unsigned char ** ptr_contenido, short int num_columnas,short int fila,short int columna);
+
+void mostrar_juego(unsigned char ** ptr_contenido, short int *ptr_filas,short int * ptr_columnas);
 
 #endif

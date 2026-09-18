@@ -1,6 +1,8 @@
 #ifndef FUNCIONES_PRIMARIAS_H
 #define FUNCIONES_PRIMARIAS_H
 
+unsigned char ficha_aleatoria();
+
 short int pos_byte(short int num_columnas_tabla, short int fila, short int columna);
 
 short int pos_bit_in_byte(short int num_columnas_tabla, short int fila, short int columna);
