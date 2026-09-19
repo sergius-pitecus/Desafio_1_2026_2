@@ -112,7 +112,7 @@ short int buscar_combinaciones(unsigned char ** ptr_contenido,short int num_fila
                     for(short int fila_2 = fila-arriba; fila_2 <= fila+abajo ; fila_2++){
                         short int derecha_2 = buscar_derecha(ptr_contenido,fila_2,columna,num_columnas);
                         short int izquierda_2 = buscar_izquierda(ptr_contenido,fila_2,columna,num_columnas);
-                        if (derecha_2 + izquierda_2 >= 2){
+                        if (derecha_2 + izquierda_2 >= 1){
                             for(short int columna_2 = columna - izquierda_2; columna_2 <= columna + derecha_2; columna_2++){
                                 cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna_2,1);
                             }
@@ -128,7 +128,7 @@ short int buscar_combinaciones(unsigned char ** ptr_contenido,short int num_fila
                     for(short int columna_2 = columna-izquierda; columna_2 <= columna+derecha ; columna_2++){
                         short int arriba_2 = buscar_arriba(ptr_contenido,fila,columna_2,num_columnas);
                         short int abajo_2 = buscar_abajo(ptr_contenido,fila,columna_2,num_columnas,num_filas);
-                        if(arriba_2 + abajo_2 >= 2){
+                        if(arriba_2 + abajo_2 >= 1){
                             for(short int fila_2 = fila - arriba_2; fila_2 <= fila + abajo_2; fila_2++){
                                 cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna_2,1);
                             }
@@ -183,7 +183,7 @@ void quitar_una_ficha(unsigned char ** ptr_contenido, short int num_columnas,sho
     }
     ficha_actual = ficha_aleatoria();
     //cuando fila_2 es 0;
-    cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna,ficha_actual);
+    cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna,ficha_actual); 
 }
 
 void mostrar_juego(unsigned char ** ptr_contenido, short int *ptr_filas,short int * ptr_columnas){

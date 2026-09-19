@@ -43,7 +43,6 @@ main(){
             cout<<"ingese la columna: ";
             cin>>columna;
             quitar_una_ficha(ptr_contenido,*ptr_columnas,fila,columna);//funciona_bien
-            //print_tablero(ptr_contenido,*ptr_columnas,*ptr_filas);
             mostrar_juego(ptr_contenido,ptr_filas,ptr_columnas);
             break;
             
@@ -70,15 +69,17 @@ main(){
             short int columna_agregar;
             cout<<"ingrese el lugar de la columna a añadir: ";
             cin>>columna_agregar;
-            //aqui iria la funcion de agregar columna
-            //print_tablero(ptr_contenido,*ptr_columnas,*ptr_filas);
+            ptr_contenido = agregar_columna(ptr_contenido,columna_agregar,ptr_filas,ptr_columnas,bytes_reservados,ptr_num_expo);
+            print_tablero(ptr_contenido,*ptr_columnas,*ptr_filas);
+            rellenar_huecos(ptr_contenido,*ptr_filas,*ptr_columnas);
             mostrar_juego(ptr_contenido,ptr_filas,ptr_columnas);
             break;
         case 5:
             short int columna_sacar;
             cout<<"ingrese la columna a eliminar: ";
             cin>>columna_sacar;
-            //quitar_columna(ptr_contenido,columna_sacar,ptr_filas,ptr_columnas,bytes_reservados,ptr_num_expo);
+            ptr_contenido = quitar_columna(ptr_contenido,columna_sacar,ptr_filas,ptr_columnas,bytes_reservados,ptr_num_expo);
+            mostrar_juego(ptr_contenido,ptr_filas,ptr_columnas);
             break;
         case 6:
             cout<<"--gracias por jugar--";

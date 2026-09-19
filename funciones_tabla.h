@@ -17,7 +17,7 @@ unsigned char ** agregar_columna(unsigned char ** ptr_contenido, short int colum
 void quitar_fila(unsigned char ** ptr_contenido, short int fila_quitar,short int * ptr_num_filas,
      short int * ptr_num_columnas, short int * bytes_reservados, short int * ptr_num_expo);
 
-void quitar_columna(unsigned char ** ptr_contenido, short int columna_quitar,short int * ptr_num_filas,
+unsigned char ** quitar_columna(unsigned char ** ptr_contenido, short int columna_quitar,short int * ptr_num_filas,
      short int * ptr_num_columnas, short int * bytes_reservados, short int * ptr_num_expo);
 
 #endif

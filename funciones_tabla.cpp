@@ -78,7 +78,7 @@ unsigned char ** agregar_fila(unsigned char ** ptr_contenido, short int fila_rem
     if (bytes_necesarios > *bytes_reservados){
     ptr_contenido = expandir_memoria(ptr_contenido,bytes_reservados,bytes_necesarios,ptr_num_expo);
     }
-    if(fila_remplazar != *ptr_num_filas-1){
+    if(fila_remplazar != *ptr_num_filas){
         for(short int fila = ((*ptr_num_filas)-2); fila >= fila_remplazar; fila--){ //el -2 es por que ya le sumamos 1 a las filas y ademas aqui hay fila 0 lo que retrasa cada fila por 1
             for(short int columna = ((*ptr_num_columnas)-1);columna >= 0;columna--){
                 unsigned char ficha = obtener_ficha(ptr_contenido,*ptr_num_columnas,fila,columna);
@@ -94,25 +94,48 @@ unsigned char ** agregar_fila(unsigned char ** ptr_contenido, short int fila_rem
     
 }
 
-unsigned char ** agregar_columna(unsigned char ** ptr_contenido, short int columna_remplazar,short int * ptr_num_filas, short int * ptr_num_columnas,
-     short int * bytes_reservados, short int * ptr_num_expo){
-    *ptr_num_columnas += 1;
-    short int bytes_necesarios = ((((*ptr_num_filas * *ptr_num_columnas)*3)+7)/8); //divicion entera que redondea al techo
+unsigned char ** agregar_columna(unsigned char ** ptr_contenido, short int columna_remplazar,
+    short int * ptr_num_filas, short int * ptr_num_columnas,short int * bytes_reservados, short int * ptr_num_expo){
 
-    if (bytes_necesarios > *bytes_reservados){
-    ptr_contenido = expandir_memoria(ptr_contenido,bytes_reservados,bytes_necesarios,ptr_num_expo);
+    unsigned char ** nuevo_ptr_contenido = new unsigned char *[4];
+
+    *ptr_num_columnas +=1 ;
+
+    short int bytes_necesarios = ((((*ptr_num_filas * *ptr_num_columnas)*3)+7)/8);
+    short int * bytes_reservados_2 = new short int(24);
+    short int * ptr_num_expo_2 = new short int(4);
+    for(int i = 0; i<4; i++ ){
+        nuevo_ptr_contenido[i] = new unsigned char[6];
     }
+    nuevo_ptr_contenido = expandir_memoria(nuevo_ptr_contenido,bytes_reservados_2,bytes_necesarios,ptr_num_expo_2);
 
-    for(short int columna = ((*ptr_num_columnas)-2); columna >= columna_remplazar; columna--){ //el -2 es por que ya le sumamos 1 a las filas y ademas aqui hay fila 0 lo que retrasa cada fila por 1
-        for(short int fila = ((*ptr_num_filas)-1);fila >= 0;fila--){
-            unsigned char ficha = obtener_ficha(ptr_contenido,*ptr_num_columnas - 1,fila,columna);
-            cambiar_ficha(ptr_contenido,*ptr_num_columnas,fila,columna + 1,ficha);
+    if(columna_remplazar != *ptr_num_columnas){
+        for(short int columna = 0; columna < columna_remplazar; columna++){
+            for(short int fila = 0; fila < *ptr_num_filas; fila++){
+                unsigned char ficha_pasar = obtener_ficha(ptr_contenido,*ptr_num_columnas-1,fila,columna);
+                cambiar_ficha(nuevo_ptr_contenido,*ptr_num_columnas,fila,columna,ficha_pasar);
+            }
+        }
+        for(short int columna = columna_remplazar; columna < *ptr_num_columnas-1; columna++){
+            for(short int fila = 0; fila < *ptr_num_filas; fila++){
+                unsigned char ficha_pasar = obtener_ficha(ptr_contenido,*ptr_num_columnas-1,fila,columna);
+                cambiar_ficha(nuevo_ptr_contenido,*ptr_num_columnas,fila,columna+1,ficha_pasar);
+            }
         }
     }
     for(short int fila = 0; fila < *ptr_num_filas; fila++){
-        cambiar_ficha(ptr_contenido,*ptr_num_columnas,fila,columna_remplazar,1);// el 1 es por que ese es el bit del espacio libre (001)
+        cambiar_ficha(nuevo_ptr_contenido,*ptr_num_columnas,fila,columna_remplazar,1);
     }
-    return ptr_contenido;
+    for(short int i = 0; i < *ptr_num_expo; i++){
+        delete[] ptr_contenido[i];
+    }
+    delete[] ptr_contenido;
+    *ptr_num_expo = *ptr_num_expo_2;
+    delete ptr_num_expo_2;
+    *bytes_reservados = *bytes_reservados_2;
+    delete bytes_reservados_2;
+
+    return nuevo_ptr_contenido;
 }
 
 void quitar_fila(unsigned char ** ptr_contenido, short int fila_quitar,short int * ptr_num_filas,
@@ -136,12 +159,47 @@ void quitar_fila(unsigned char ** ptr_contenido, short int fila_quitar,short int
     }
 }
 
-void quitar_columna(unsigned char ** ptr_contenido, short int columna_quitar,short int * ptr_num_filas,
+unsigned char ** quitar_columna(unsigned char ** ptr_contenido, short int columna_quitar,short int * ptr_num_filas,
      short int * ptr_num_columnas, short int * bytes_reservados, short int * ptr_num_expo){
-    
-    *ptr_num_columnas -= 1;
+     
+    unsigned char ** nuevo_ptr_contenido = new unsigned char *[4];
+    short int * bytes_reservados_2 = new short int(24);
+    short int * ptr_num_expo_2 = new short int(4);
+    *ptr_num_columnas -=1 ;
 
-    for(short int columna = columna_quitar + 1; columna <= *ptr_num_columnas;columna++){
+    short int bytes_necesarios = ((((*ptr_num_filas * *ptr_num_columnas)*3)+7)/8);
+    for(int i = 0; i<4; i++ ){
+        nuevo_ptr_contenido[i] = new unsigned char[6];
+    }
+    if (bytes_necesarios > *bytes_reservados_2){ 
+    nuevo_ptr_contenido =  expandir_memoria(nuevo_ptr_contenido,bytes_reservados_2,bytes_necesarios, ptr_num_expo_2);
+    }
+
+    for(short int columna = 0; columna < columna_quitar; columna++){
+        for(short int fila = 0; fila < *ptr_num_filas; fila++){
+            unsigned char ficha_pasar = obtener_ficha(ptr_contenido,*ptr_num_columnas+1,fila,columna);
+            cambiar_ficha(nuevo_ptr_contenido,*ptr_num_columnas,fila,columna,ficha_pasar);
+        }
+    }
+    for(short int columna = columna_quitar + 1 ; columna < *ptr_num_columnas + 1; columna++){
+        for(short int fila = 0; fila < *ptr_num_filas; fila++){
+            unsigned char ficha_pasar = obtener_ficha(ptr_contenido,*ptr_num_columnas+1,fila,columna);
+            cambiar_ficha(nuevo_ptr_contenido,*ptr_num_columnas,fila,columna - 1,ficha_pasar);
+        }
+    }
+    for(short int i = 0; i < *ptr_num_expo; i++){
+        delete[] ptr_contenido[i];
+    }
+    delete[] ptr_contenido;
+    *bytes_reservados = *bytes_reservados_2;
+    delete bytes_reservados_2;
+    *ptr_num_expo = *ptr_num_expo_2;
+    delete ptr_num_expo_2;
+    return nuevo_ptr_contenido;
+}
+
+/*
+for(short int columna = columna_quitar + 1; columna <= *ptr_num_columnas;columna++){
         for(short int fila = *ptr_num_filas-1; fila >= 0; fila--){
 
             unsigned char ficha_cambio = obtener_ficha(ptr_contenido,*ptr_num_columnas+1,fila,columna);
@@ -154,4 +212,4 @@ void quitar_columna(unsigned char ** ptr_contenido, short int columna_quitar,sho
     if(bytes_necesarios < (*bytes_reservados * 65) / 100){
         disminuir_memoria(ptr_contenido,bytes_reservados,bytes_necesarios);
     }
-}
+*/

@@ -212,7 +212,6 @@ void reubicar_ficha(unsigned char ** ptr_contenido, short int num_columnas
     // la verdad trabajar una ficha por individual no tiene ningun sentido, es reubicar y despues borrar los exedentes de memoria 
 
     short int ficha_cambio = obtener_ficha(ptr_contenido,num_columnas,fila_anterior,columna_anterior);
-
     cambiar_ficha(ptr_contenido,num_columnas,fila_actual,columna_actual,ficha_cambio);
     // xd, lit eso es todo (pese esta funcion iba a ser re dificil)
 
