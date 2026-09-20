@@ -4,40 +4,89 @@
 #include <random>
 using namespace std;
 
-void print_tablero(unsigned char ** ptr_contenido, short int num_columnas, short int num_filas){
-    cout<<"0  ";
+void print_tablero(unsigned char ** ptr_contenido, unsigned short num_columnas, unsigned short num_filas){
     for (short int fila = 0; fila<num_filas;fila++){
-        for(short int columna = 0; columna<num_columnas; columna++){
+        for(unsigned short columna = 0; columna<num_columnas; columna++){
             unsigned char ficha_actual = obtener_ficha(ptr_contenido,num_columnas,fila,columna);
 
             switch (ficha_actual){
             
             case 1:
-            cout<<"  ";
+            cout<<"   ";
             break;
             
             case 2:
-            cout<<"H ";
+            cout<<"■  ";
             break;
 
             case 3:
-            cout<<"O ";
+            cout<<"◉  ";
             break;
             
             case 4:
-            cout<<"% ";
+            cout<<"♥  ";
             break;
 
             case 5:
-            cout<<"W ";
+            cout<<"♦  ";
             break;
 
             case 6:
-            cout<<"@ ";
+            cout<<"⬡  ";
             break;
 
             case 7:
-            cout<<"$ ";
+            cout<<"★  ";
+            break;
+            
+            default:
+            cout<<"!  ";
+            break;
+            }
+        }
+        cout<<fila<<"\n";
+    }
+    for(unsigned short i = 0; i < num_columnas; i++){
+        if(i<10){cout<<i<<"  ";}
+        if(i<100 && i>9){cout<<i<<" ";}
+        if(i<1000 && i>99){cout<<i;}
+    }
+    cout<<"\n\n";
+}
+
+void print_tablero_binario(unsigned char ** ptr_contenido, unsigned short num_columnas, unsigned short num_filas){
+    for (signed short fila = 0; fila<num_filas;fila++){
+        for(signed short columna = 0; columna<num_columnas; columna++){
+            unsigned char ficha_actual = obtener_ficha(ptr_contenido,num_columnas,fila,columna);
+
+            switch (ficha_actual){
+            
+            case 1:
+            cout<<"   ";
+            break;
+            
+            case 2:
+            cout<<"010 ";
+            break;
+
+            case 3:
+            cout<<"011 ";
+            break;
+            
+            case 4:
+            cout<<"100 ";
+            break;
+
+            case 5:
+            cout<<"101 ";
+            break;
+
+            case 6:
+            cout<<"110 ";
+            break;
+
+            case 7:
+            cout<<"111 ";
             break;
             
             default:
@@ -45,16 +94,18 @@ void print_tablero(unsigned char ** ptr_contenido, short int num_columnas, short
             break;
             }
         }
-        cout<<"\n"<<fila+1<<"  ";
+        cout<<"  "<<fila<<"\n";
     }
-    for(short int i = 0; i < num_columnas; i++){
-        cout<<i<<" ";
+    for(unsigned short i = 0; i < num_columnas; i++){
+        if(i<10){cout<<i<<"   ";}
+        if(i<100 && i>9){cout<<i<<"  ";}
+        if(i<1000 && i>99){cout<<i<<" ";}
     }
     cout<<"\n\n";
 }
 
-bool comparar_fichas(unsigned char ** ptr_contenido, short int fila_1, short int fila_2, short int columna_1,
-    short int columna_2, short int num_columnas){
+bool comparar_fichas(unsigned char ** ptr_contenido, unsigned short fila_1, unsigned short fila_2, unsigned short columna_1,
+    unsigned short columna_2, unsigned short num_columnas){
     // retorna true si son iguales, false si no
     if(obtener_ficha(ptr_contenido,num_columnas,fila_1,columna_1) != 1){
     return (obtener_ficha(ptr_contenido,num_columnas,fila_1,columna_1) == obtener_ficha(ptr_contenido,num_columnas,fila_2,columna_2));
@@ -64,76 +115,83 @@ bool comparar_fichas(unsigned char ** ptr_contenido, short int fila_1, short int
     }
 }
 
-short int buscar_arriba(unsigned char ** ptr_contenido,short int fila, short int columna, short int num_columnas){
-    short int cont = 0;
-    while((fila-cont-1 >= 0) && comparar_fichas(ptr_contenido,fila,fila-cont-1,columna,columna,num_columnas)){
+unsigned short buscar_arriba(unsigned char ** ptr_contenido,unsigned short fila, unsigned short columna, unsigned short num_columnas){
+    short cont = 0;
+    while((short(fila)-cont-1 >= 0) && comparar_fichas(ptr_contenido,fila,short(fila)-cont-1,columna,columna,num_columnas)){
         cont += 1;
     }
     return cont;
 }
 
-short int buscar_abajo(unsigned char ** ptr_contenido,short int fila, short int columna, short int num_columnas, short int num_filas){
-    short int cont = 0;
+unsigned short buscar_abajo(unsigned char ** ptr_contenido,unsigned short fila, unsigned short columna, unsigned short num_columnas, unsigned short num_filas){
+    short cont = 0;
     while((fila+cont+1 < num_filas) && comparar_fichas(ptr_contenido,fila,fila + cont + 1,columna,columna,num_columnas)){
         cont += 1;
     }
     return cont;
 }
 
-short int buscar_izquierda(unsigned char ** ptr_contenido,short int fila, short int columna, short int num_columnas){
-    short int cont = 0;
-    while((columna-cont-1 >= 0 ) && comparar_fichas(ptr_contenido,fila,fila,columna,columna - cont - 1,num_columnas)){
+unsigned short buscar_izquierda(unsigned char ** ptr_contenido,unsigned short fila, unsigned short columna, unsigned short num_columnas){
+    short cont = 0;
+    while((short(columna)-cont-1 >= 0 ) && comparar_fichas(ptr_contenido,fila,fila,columna,short(columna) - cont - 1,num_columnas)){
         cont += 1;
     }
     return cont;
 
 }
 
-short int buscar_derecha(unsigned char ** ptr_contenido,short int fila, short int columna, short int num_columnas){
-    short int cont = 0;
+unsigned short buscar_derecha(unsigned char ** ptr_contenido,unsigned short fila,unsigned short columna, unsigned short num_columnas){
+    short cont = 0;
     while((columna+cont+1 < num_columnas ) && comparar_fichas(ptr_contenido,fila,fila,columna,columna + cont + 1,num_columnas)){
         cont += 1;
     }
     return cont;
 }
 
-short int buscar_combinaciones(unsigned char ** ptr_contenido,short int num_filas, short int num_columnas){
-    //hay que terminar esta funcion, mañana volverla a analizar, mañana si o si hay quie terminar codigo
+unsigned short buscar_combinaciones(unsigned char ** ptr_contenido,unsigned short num_filas, unsigned short num_columnas, unsigned short *ptr_fichas_eliminadas){
 
-    short int contador_combinaciones = 0;
+    unsigned short contador_combinaciones = 0;
 
-    for(short int fila = 0; fila < num_filas; fila++){
-        for(short int columna = 0; columna < num_columnas; columna++){
+    for(unsigned short fila = 0; fila < num_filas; fila++){
+        for(unsigned short columna = 0; columna < num_columnas; columna++){
             if(obtener_ficha(ptr_contenido,num_columnas,fila,columna) != 1){
-                short int arriba = buscar_arriba(ptr_contenido,fila,columna,num_columnas);
-                short int abajo = buscar_abajo(ptr_contenido,fila,columna,num_columnas,num_filas);
+                unsigned short arriba = buscar_arriba(ptr_contenido,fila,columna,num_columnas);
+                unsigned short abajo = buscar_abajo(ptr_contenido,fila,columna,num_columnas,num_filas);
 
                 if(arriba + abajo >= 2 ){
-                    for(short int fila_2 = fila-arriba; fila_2 <= fila+abajo ; fila_2++){
-                        short int derecha_2 = buscar_derecha(ptr_contenido,fila_2,columna,num_columnas);
-                        short int izquierda_2 = buscar_izquierda(ptr_contenido,fila_2,columna,num_columnas);
-                        if (derecha_2 + izquierda_2 >= 1){
-                            for(short int columna_2 = columna - izquierda_2; columna_2 <= columna + derecha_2; columna_2++){
+                    for(unsigned short fila_2 = fila-arriba; fila_2 <= fila+abajo ; fila_2++){
+                        unsigned short derecha_2 = buscar_derecha(ptr_contenido,fila_2,columna,num_columnas);
+                        unsigned short izquierda_2 = buscar_izquierda(ptr_contenido,fila_2,columna,num_columnas);
+                        if (derecha_2 + izquierda_2 >= 2){
+                            for(unsigned short columna_2 = columna - izquierda_2; columna_2 <= columna + derecha_2; columna_2++){
                                 cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna_2,1);
+                                *ptr_fichas_eliminadas += 1;
                             }
+                        contador_combinaciones += 1;
+                        *ptr_fichas_eliminadas -= 1;
                         }
                         cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna,1);
+                        *ptr_fichas_eliminadas += 1 ;
                     }
                     contador_combinaciones += 1;
                 }
 
-                short int izquierda = buscar_izquierda(ptr_contenido,fila,columna,num_columnas);
-                short int derecha= buscar_derecha(ptr_contenido,fila,columna,num_columnas);
+                unsigned short izquierda = buscar_izquierda(ptr_contenido,fila,columna,num_columnas);
+                unsigned short derecha= buscar_derecha(ptr_contenido,fila,columna,num_columnas);
                 if(izquierda + derecha >= 2){
-                    for(short int columna_2 = columna-izquierda; columna_2 <= columna+derecha ; columna_2++){
-                        short int arriba_2 = buscar_arriba(ptr_contenido,fila,columna_2,num_columnas);
-                        short int abajo_2 = buscar_abajo(ptr_contenido,fila,columna_2,num_columnas,num_filas);
-                        if(arriba_2 + abajo_2 >= 1){
-                            for(short int fila_2 = fila - arriba_2; fila_2 <= fila + abajo_2; fila_2++){
+                    for(unsigned short columna_2 = columna-izquierda; columna_2 <= columna+derecha ; columna_2++){
+                        unsigned short arriba_2 = buscar_arriba(ptr_contenido,fila,columna_2,num_columnas);
+                        unsigned short abajo_2 = buscar_abajo(ptr_contenido,fila,columna_2,num_columnas,num_filas);
+                        if(arriba_2 + abajo_2 >= 2){
+                            for(unsigned short fila_2 = fila - arriba_2; fila_2 <= fila + abajo_2; fila_2++){
                                 cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna_2,1);
+                                *ptr_fichas_eliminadas += 1;
                             }
+                        contador_combinaciones += 1;
+                        *ptr_fichas_eliminadas -= 1;
                         }
                         cambiar_ficha(ptr_contenido,num_columnas,fila,columna_2,1);
+                        *ptr_fichas_eliminadas += 1 ;
                     }
                     contador_combinaciones += 1;
                 }
@@ -143,14 +201,14 @@ short int buscar_combinaciones(unsigned char ** ptr_contenido,short int num_fila
     return contador_combinaciones; 
 }
 
-void rellenar_huecos(unsigned char ** ptr_contenido,short int num_filas, short int num_columnas){
-    unsigned char ficha_actual;
-    for(short int fila = num_filas-1; fila >= 0; fila--){
-        for(short int columna = num_columnas-1; columna >= 0; columna--){
+void rellenar_huecos(unsigned char ** ptr_contenido,unsigned short num_filas, unsigned short num_columnas){
+    unsigned short ficha_actual;
+    for(short fila = num_filas-1; fila >= 0; fila--){
+        for(short columna = num_columnas-1; columna >= 0; columna--){
             ficha_actual = obtener_ficha(ptr_contenido,num_columnas,fila,columna);
             if(ficha_actual == 1){
                 unsigned char ficha_auxiliar = 1;
-                short int cont = 1;
+                unsigned short cont = 1;
                 if(fila == 0){
                     cambiar_ficha(ptr_contenido,num_columnas,fila,columna,ficha_aleatoria());
                 }
@@ -172,9 +230,9 @@ void rellenar_huecos(unsigned char ** ptr_contenido,short int num_filas, short i
     }
 }
 
-void quitar_una_ficha(unsigned char ** ptr_contenido, short int num_columnas,short int fila,short int columna){
+void quitar_una_ficha(unsigned char ** ptr_contenido, unsigned short num_columnas,unsigned short fila,unsigned short columna){
     cambiar_ficha(ptr_contenido,num_columnas,fila,columna,1);
-    short int fila_2 = fila;
+    unsigned short fila_2 = fila;
     unsigned char ficha_actual;
     while(fila_2 >= 1){
         ficha_actual = obtener_ficha(ptr_contenido,num_columnas,fila_2 - 1,columna);
@@ -186,23 +244,19 @@ void quitar_una_ficha(unsigned char ** ptr_contenido, short int num_columnas,sho
     cambiar_ficha(ptr_contenido,num_columnas,fila_2,columna,ficha_actual); 
 }
 
-void mostrar_juego(unsigned char ** ptr_contenido, short int *ptr_filas,short int * ptr_columnas){
+void mostrar_juego(unsigned char ** ptr_contenido, unsigned short *ptr_filas,unsigned short * ptr_columnas, unsigned short * ptr_fichas_eliminadas, unsigned short * num_combinaciones_total,unsigned short num_eliminaciones,unsigned short *puntos, unsigned short eliminaciones_puntuales){
 
-    short int num_combinaciones = 1;
-    short int acumulacion_combinaciones = 0;
-    short int combinaciones_en_cascada = 0;
-    short int cont_referencial = 0;
-
+    unsigned short num_combinaciones = 1;
+    unsigned short acumulacion_combinaciones = 0;
+    unsigned short cont_referencial = 0;
+    unsigned short puntos_auxiliar = *ptr_fichas_eliminadas;
     print_tablero(ptr_contenido, *ptr_columnas, *ptr_filas);
 
     while(num_combinaciones != 0){
 
-        num_combinaciones = buscar_combinaciones(ptr_contenido,*ptr_filas,*ptr_columnas);
+        num_combinaciones = buscar_combinaciones(ptr_contenido,*ptr_filas,*ptr_columnas, ptr_fichas_eliminadas);
         if(num_combinaciones == 0){break;}
         acumulacion_combinaciones += num_combinaciones;
-        if(cont_referencial != 0){
-            combinaciones_en_cascada += num_combinaciones;
-        }
 
         print_tablero(ptr_contenido, *ptr_columnas, *ptr_filas);
 
@@ -212,7 +266,14 @@ void mostrar_juego(unsigned char ** ptr_contenido, short int *ptr_filas,short in
 
         cont_referencial += 1;
     }
-    cout<<"numero total de combinaciones: "<<acumulacion_combinaciones<<"\n"
-        <<"combinaciones en cascada: "<<combinaciones_en_cascada<<"\n"
-        <<"numero de cascadas(veces que se refresco): "<<cont_referencial<<"\n";
+    *puntos += ((*ptr_fichas_eliminadas-puntos_auxiliar) * 5);
+    *num_combinaciones_total += acumulacion_combinaciones;
+    cout<<"dimenciones filaxcolumna: "<<*ptr_filas<<"x"<<*ptr_columnas<<"\n"
+        <<"eliminaciones puntuales(una ficha): "<<eliminaciones_puntuales<<"\n"
+        <<"combinaciones en cascada: "<<((acumulacion_combinaciones > 0) ? acumulacion_combinaciones-1 : 0)<<"\n"
+        <<"veces que se refresco: "<<cont_referencial<<"\n"
+        <<"total fichas eliminadas: "<<*ptr_fichas_eliminadas<<"\n"
+        <<"total combinaciones detectadas: "<<*num_combinaciones_total<<"\n"
+        <<"filas/columnas eliminadas: "<< num_eliminaciones<<"\n"
+        <<"puntuacion: "<<*puntos<<"\n\n";
 }
