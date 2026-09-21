@@ -68,8 +68,7 @@ unsigned char ** crear_tablero(unsigned char ** ptr_contenido,unsigned short num
 
 unsigned char ** agregar_fila(unsigned char ** ptr_contenido, unsigned short fila_remplazar,unsigned short * ptr_num_filas, unsigned short * ptr_num_columnas,
      unsigned short * bytes_reservados, unsigned short * ptr_num_expo){
-    // ptr_num_expo es el numero de arreglos dinamicos dentro del arreglo principal ptr_contenido
-    // abajo en ese reguero de codigo se verifica la memoria ya reservada y la necesaria para agregar la fila
+    // ptr_num_expo es el numero de arreglos dinamicos posibles dentro del arreglo principal ptr_contenido
     
     *ptr_num_filas += 1;
     short int bytes_necesarios = ((((*ptr_num_filas * *ptr_num_columnas)*3)+7)/8); //divicion entera que redondea al techo
@@ -150,7 +149,6 @@ void quitar_fila(unsigned char ** ptr_contenido, unsigned short fila_quitar,unsi
             }
         }
     }
-    //de aqui abajo es gestion de memoria
     unsigned short bytes_necesarios = ((((*ptr_num_filas * *ptr_num_columnas)*3)+7)/8);
     if(bytes_necesarios < (*bytes_reservados * 65) / 100){
         disminuir_memoria(ptr_contenido,bytes_reservados,bytes_necesarios);

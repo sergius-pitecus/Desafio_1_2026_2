@@ -1,8 +1,9 @@
 #include <iostream>
 #include "funciones_juego.h"
 #include "funciones_primarias.h"
-#include <random>
 using namespace std;
+
+
 
 void print_tablero(unsigned char ** ptr_contenido, unsigned short num_columnas, unsigned short num_filas){
     for (short int fila = 0; fila<num_filas;fila++){

@@ -5,7 +5,7 @@
 #include <windows.h>
 using namespace std;
 
-main(){
+int main(){
 
     SetConsoleOutputCP(CP_UTF8);//para poder imprimir en unicode mejores fichas
     SetConsoleCP(CP_UTF8);
@@ -112,6 +112,7 @@ main(){
             break;
         }
     }
+    return 0;
 }
 
 
